@@ -27,14 +27,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.fragment_container,myFragment);
 
-        btAdapter=BluetoothAdapter.getDefaultAdapter();
-        if(btAdapter==null){
-            Toast.makeText(getApplicationContext(),"No bluetooth Detected",Toast.LENGTH_LONG).show();
-        } else {
-            if(!btAdapter.isEnabled()){
-                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            }
-        }
+        
     }
 
 

@@ -109,24 +109,6 @@ public class blueTooth extends Service {
         }
     }
 
-    // Register health application through the Bluetooth Health API.
-    private void registerApp(int dataType) {
-        mBluetoothHealth.registerSinkAppConfiguration(TAG, dataType, mHealthCallback);
-    }
-    // Unregister health application through the Bluetooth Health API.
-    private void unregisterApp() {
-        mBluetoothHealth.unregisterAppConfiguration(mHealthAppConfig);
-    }
-    // Connect channel through the Bluetooth Health API.
-    private void connectChannel() {
-        Log.i(TAG, "connectChannel()");
-        mBluetoothHealth.connectChannelToSource(mDevice, mHealthAppConfig);
-    }
-    // Disconnect channel through the Bluetooth Health API.
-    private void disconnectChannel() {
-        Log.i(TAG, "disconnectChannel()");
-        mBluetoothHealth.disconnectChannel(mDevice, mHealthAppConfig, mChannelId);
-    }
 
 
 
