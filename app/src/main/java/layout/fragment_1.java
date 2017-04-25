@@ -18,6 +18,8 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -45,24 +47,20 @@ public class fragment_1 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_1, container, false);
 
         GraphView graph = (GraphView) rootView.findViewById(R.id.graph);
-       // GraphView graph2 = (GraphView) rootView.findViewById(R.id.graph2);
         graph.setTitle("ParkinsonTremorNotifier");
 
         mSeries1 = new LineGraphSeries<>(generateData());
-        //mSeries1.setBackgroundColor(0x56f44);
         mSeries1.setTitle("Xout Values");
         mSeries1.setColor(Color.GREEN);
         graph.addSeries(mSeries1);
 
 
         mSeries2 = new LineGraphSeries<>(generateData());
-       // mSeries2.setBackgroundColor(0x424ef4);
         mSeries2.setTitle("Yout values");
         mSeries2.setColor(Color.BLUE);
         graph.addSeries(mSeries2);
 
         mSeries3 = new LineGraphSeries<>(generateData());
-       // mSeries3.setBackgroundColor(0xf44253);
         mSeries3.setTitle("Zout values");
         mSeries2.setColor(Color.RED);
         graph.addSeries(mSeries3);
@@ -70,6 +68,14 @@ public class fragment_1 extends Fragment {
         graph.getViewport().setScrollable(true);
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
+        graph.getGridLabelRenderer().setVerticalAxisTitle("Accelerometer Reading");
+
+        // set manual x bounds to have nice steps
+       // graph.getViewport().setMinX(d1.getTime());
+       // graph.getViewport().setMaxX(d1.getTime());
+      //  graph.getViewport().setXAxisBoundsManual(true);
+        graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
 
 
         return rootView;
@@ -157,13 +163,17 @@ public class fragment_1 extends Fragment {
 
 
    private DataPoint[] generateData() {
-       int count = 30;
+        int count = 60;
+       Calendar calendar = Calendar.getInstance();
+
         DataPoint[] values = new DataPoint[count];
+
         for (int i=0; i<count; i++) {
-            double x= i;
+           // double d1=calendar.getTimeInMillis();
+            double d1= i;
             double f = mRand.nextDouble()*0.15+0.3;
             double y = Math.sin(i*f+2) + mRand.nextDouble()*0.3;
-            DataPoint v = new DataPoint(x, y);
+            DataPoint v = new DataPoint(d1, y);
             values[i] = v;
         }
         return values;
