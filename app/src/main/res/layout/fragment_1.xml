@@ -5,9 +5,11 @@
     tools:context="layout.fragment_1">
 
     <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/graph"/>
+
+
 
 
 

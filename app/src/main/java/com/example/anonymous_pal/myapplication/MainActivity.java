@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myFragment = new fragment_1();
+        /*myFragment = new fragment_1();
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.fragment_container,myFragment);
+        ft.add(R.id.fragment_container,myFragment); */
 
-        
     }
 
 

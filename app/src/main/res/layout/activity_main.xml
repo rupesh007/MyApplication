@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.anonymous_pal.myapplication.MainActivity">
 
+
   <fragment
       android:id="@+id/fragment_container"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent" />
-
+      android:name="layout.fragment_1"
+      android:layout_width="379dp"
+      android:layout_height="436dp"
+      tools:layout_editor_absoluteX="0dp"
+      tools:layout_editor_absoluteY="75dp" />
 
 </android.support.constraint.ConstraintLayout>

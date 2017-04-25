@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothHealthAppConfiguration;
 import android.bluetooth.BluetoothHealthCallback;
 import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -133,7 +134,7 @@ public class blueTooth extends Service {
     private final BluetoothHealthCallback mHealthCallback = new BluetoothHealthCallback() {
         // Callback to handle application registration and unregistration events.  The service
         // passes the status back to the UI client.
-        public void onHealthAppConfigurationStatusChange(BluetoothHealthAppConfiguration config,
+       public void onHealthAppConfigurationStatusChange(BluetoothHealthAppConfiguration config,
                                                          int status) {
             if (status == BluetoothHealth.APP_CONFIG_REGISTRATION_FAILURE) {
                 mHealthAppConfig = null;
