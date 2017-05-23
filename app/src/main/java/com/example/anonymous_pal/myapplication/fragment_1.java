@@ -1,4 +1,4 @@
-package layout;
+package com.example.anonymous_pal.myapplication;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,16 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.anonymous_pal.myapplication.R;
 import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -39,8 +34,6 @@ public class fragment_1 extends Fragment {
     // private double graph2LastXValue = 5d;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,23 +43,23 @@ public class fragment_1 extends Fragment {
         graph.setTitle("ParkinsonTremorNotifier");
 
         mSeries1 = new LineGraphSeries<>(generateData());
-        mSeries1.setTitle("Xout Values");
+        mSeries1.setTitle("Xout");
         mSeries1.setColor(Color.GREEN);
         graph.addSeries(mSeries1);
 
-
         mSeries2 = new LineGraphSeries<>(generateData());
-        mSeries2.setTitle("Yout values");
+        mSeries2.setTitle("Yout");
         mSeries2.setColor(Color.BLUE);
         graph.addSeries(mSeries2);
 
         mSeries3 = new LineGraphSeries<>(generateData());
-        mSeries3.setTitle("Zout values");
+        mSeries3.setTitle("Zout");
         mSeries2.setColor(Color.RED);
         graph.addSeries(mSeries3);
 
         graph.getViewport().setScrollable(true);
         graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setMargin(100);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Accelerometer Reading");
@@ -81,6 +74,7 @@ public class fragment_1 extends Fragment {
         return rootView;
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -93,10 +87,36 @@ public class fragment_1 extends Fragment {
 
     }
 
+/*    @Override
+    public void onResume() {
+        super.onResume();
+    }  */
+
+    @Override
+    public void onActivityCreated( Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mTimer1 = (new Runnable() {
+
+            @Override
+            public void run() {
+                mSeries1.resetData(generateData());
+                mSeries2.resetData(generateData());
+                mSeries3.resetData(generateData());
+                mHandler.postDelayed(this, 300);
+
+            }
+        });
+
+        mHandler.postDelayed(mTimer1, 300);
+
+
+    }
 
 
 
-   /* @Override
+
+    /* @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
@@ -108,50 +128,20 @@ public class fragment_1 extends Fragment {
        super.onResume();
 
 
-        mTimer1 = (new Runnable() {
-            @Override
-            public void run() {
-                mSeries1.resetData(generateData());
-                mHandler.postDelayed(this, 300);
+       mTimer1 = (new Runnable() {
 
-                mSeries2.resetData(generateData());
-                mHandler.postDelayed(this, 300);
+              @Override
+              public void run() {
+                  mSeries1.resetData(generateData());
+                  mSeries2.resetData(generateData());
+                  mSeries3.resetData(generateData());
+                  mHandler.postDelayed(this, 300);
 
-                mSeries3.resetData(generateData());
-                mHandler.postDelayed(this, 300);
+              }
+          });
 
-            }
-        });
+       mHandler.postDelayed(mTimer1, 300);
 
-    /*    parent.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSeries1.resetData(generateData());
-                mHandler.postDelayed(this, 300);
-            }
-        });   */
-
-       mHandler.postDelayed(mTimer1, 1000);
-
-    /* mTimer2 = new Runnable() {
-            @Override
-            public void run() {
-                graph2LastXValue += 1d;
-                mSeries2.appendData(new DataPoint(graph2LastXValue, getRandom()), true, 40);
-                mHandler.postDelayed(this, 200);
-            }
-        };
-
-     /*   parent.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                graph2LastXValue += 1d;
-                mSeries1.appendData(new DataPoint(graph2LastXValue, getRandom()), true, 40);
-                mHandler.postDelayed(this, 200);
-            }
-        });  */
-
-     //  mHandler.postDelayed(mTimer2, 1000);
     }
 
     @Override
@@ -163,8 +153,8 @@ public class fragment_1 extends Fragment {
 
 
    private DataPoint[] generateData() {
-        int count = 60;
-       Calendar calendar = Calendar.getInstance();
+        int count = 30;
+        Calendar calendar = Calendar.getInstance();
 
         DataPoint[] values = new DataPoint[count];
 

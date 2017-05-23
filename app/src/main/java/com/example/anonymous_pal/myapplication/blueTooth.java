@@ -39,6 +39,7 @@ public class blueTooth extends Service {
     private BluetoothDevice mDevice;
     private Messenger mClient;
     private int mChannelId;
+    private int dataType;
 
 
     // Status codes sent back to the UI client.
@@ -88,6 +89,16 @@ public class blueTooth extends Service {
         }
 
 
+        mBluetoothHealth.registerSinkAppConfiguration(TAG, dataType, mHealthCallback);
+        mBluetoothHealth.connectChannelToSource(mDevice, mHealthAppConfig);
+
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "BluetoothHDPService is running.");
+        return START_STICKY;
     }
 
 
@@ -108,6 +119,26 @@ public class blueTooth extends Service {
             // Unable to reach client.
             e.printStackTrace();
         }
+    }
+
+
+    // Register health application through the Bluetooth Health API.
+    private void registerApp(int dataType) {
+        mBluetoothHealth.registerSinkAppConfiguration(TAG, dataType, mHealthCallback);
+    }
+    // Unregister health application through the Bluetooth Health API.
+    private void unregisterApp() {
+        mBluetoothHealth.unregisterAppConfiguration(mHealthAppConfig);
+    }
+    // Connect channel through the Bluetooth Health API.
+    private void connectChannel() {
+        Log.i(TAG, "connectChannel()");
+        mBluetoothHealth.connectChannelToSource(mDevice, mHealthAppConfig);
+    }
+    // Disconnect channel through the Bluetooth Health API.
+    private void disconnectChannel() {
+        Log.i(TAG, "disconnectChannel()");
+        mBluetoothHealth.disconnectChannel(mDevice, mHealthAppConfig, mChannelId);
     }
 
 
@@ -147,6 +178,37 @@ public class blueTooth extends Service {
                 sendMessage(STATUS_HEALTH_APP_UNREG,
                         status == BluetoothHealth.APP_CONFIG_UNREGISTRATION_SUCCESS ?
                                 RESULT_OK : RESULT_FAIL);
+            }
+        }
+
+        // Callback to handle channel connection state changes.
+        // Note that the logic of the state machine may need to be modified based on the HDP device.
+        // When the HDP device is connected, the received file descriptor is passed to the
+        // ReadThread to read the content.
+        public void onHealthChannelStateChange(BluetoothHealthAppConfiguration config,
+                                               BluetoothDevice device, int prevState, int newState, ParcelFileDescriptor fd,
+                                               int channelId) {
+            if (Log.isLoggable(TAG, Log.DEBUG))
+                Log.d(TAG, String.format("prevState\t%d ----------> newState\t%d",
+                        prevState, newState));
+            if (prevState == BluetoothHealth.STATE_CHANNEL_DISCONNECTED &&
+                    newState == BluetoothHealth.STATE_CHANNEL_CONNECTED) {
+                if (config.equals(mHealthAppConfig)) {
+                    mChannelId = channelId;
+                    sendMessage(STATUS_CREATE_CHANNEL, RESULT_OK);
+                    (new ReadThread(fd)).start();
+                } else {
+                    sendMessage(STATUS_CREATE_CHANNEL, RESULT_FAIL);
+                }
+            } else if (prevState == BluetoothHealth.STATE_CHANNEL_CONNECTING &&
+                    newState == BluetoothHealth.STATE_CHANNEL_DISCONNECTED) {
+                sendMessage(STATUS_CREATE_CHANNEL, RESULT_FAIL);
+            } else if (newState == BluetoothHealth.STATE_CHANNEL_DISCONNECTED) {
+                if (config.equals(mHealthAppConfig)) {
+                    sendMessage(STATUS_DESTROY_CHANNEL, RESULT_OK);
+                } else {
+                    sendMessage(STATUS_DESTROY_CHANNEL, RESULT_FAIL);
+                }
             }
         }
 

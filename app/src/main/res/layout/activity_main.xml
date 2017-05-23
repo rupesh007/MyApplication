@@ -2,17 +2,18 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.anonymous_pal.myapplication.MainActivity">
 
-
+<!--
   <fragment
       android:id="@+id/fragment_container"
-      android:name="layout.fragment_1"
+      android:name="com.example.anonymous_pal.myapplication.fragment_1"
       android:layout_width="394dp"
       android:layout_height="513dp"
       tools:layout_editor_absoluteX="-11dp"
-      tools:layout_editor_absoluteY="1dp" />
+      tools:layout_editor_absoluteY="1dp" />  -->
 
 </android.support.constraint.ConstraintLayout>
